@@ -11,49 +11,59 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for styling
+# Custom CSS for advanced styling
 st.markdown(
     """
     <style>
-        /* Sidebar styles */
+        /* Slimmer Sidebar */
         [data-testid="stSidebar"] {
-            width: 200px; /* Slimmer sidebar */
-            background-color: #f0f0f5; /* Light background */
-            border-right: 2px solid #6c63ff; /* Add a purple border */
+            width: 220px;
+            background: linear-gradient(to bottom, #6c63ff, #ffffff);
+            color: #ffffff;
+            padding: 10px;
         }
         [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2 {
-            color: #6c63ff;
+            color: #ffffff;
+            font-family: "Arial", sans-serif;
         }
         [data-testid="stSidebar"] p {
-            color: #333;
+            color: #ffffff;
+            font-size: 16px;
             font-weight: bold;
         }
 
-        /* Page title */
+        /* Main Page Title */
         .css-18ni7ap h1 {
-            color: #6c63ff !important; /* Purple title */
+            font-family: "Arial Black", sans-serif;
+            font-size: 2.5rem;
+            color: #6c63ff;
         }
 
-        /* User input box */
+        /* Chat Input Field */
         .stTextInput > div {
             background: #ffffff !important;
             border: 2px solid #6c63ff !important;
+            border-radius: 10px;
+            font-family: "Arial", sans-serif;
+        }
+
+        /* Assistant Chat Styling */
+        .stMarkdown {
+            padding: 10px;
             border-radius: 8px;
         }
-
-        /* Main chat messages styling */
-        .stMarkdown {
-            font-family: "Arial", sans-serif;
-            font-size: 1.1rem;
-            padding: 10px;
-            border-radius: 10px;
-        }
-
-        /* Assistant chat messages */
         .stMarkdown p {
             background: #e1f5fe;
             padding: 10px;
             border-radius: 8px;
+        }
+
+        /* Footer */
+        footer {
+            font-family: "Arial", sans-serif;
+            text-align: center;
+            color: #6c63ff;
+            padding: 20px;
         }
     </style>
     """,
@@ -73,10 +83,11 @@ if "chat_history" not in st.session_state:
 # Streamlit page title
 st.title("🗼 benGPT ChatBot")
 
+# Welcome Message
 st.markdown(
     """
-    <div style="text-align: center;">
-        <p style="font-size: 18px; font-weight: bold; color: #6c63ff;">
+    <div style="text-align: center; padding: 20px;">
+        <p style="font-size: 20px; font-weight: bold; color: #6c63ff;">
             AI was created by God for the man's future.<br>
             <span style="font-size: 22px;">**>>>>>Unleash the power of AI with benGPT**</span>
         </p>
@@ -129,19 +140,18 @@ if user_prompt:
     with st.chat_message("assistant"):
         st.markdown(assistant_response)
 
-# Add a styled sidebar
+# Sidebar content
 st.sidebar.title("About benGPT")
 image2 = Image.open("image2.png")
 st.sidebar.image(image2, caption="benGPT", use_column_width=True)
 
 st.sidebar.markdown(
     """
-    <div style="text-align: center; color: #444;">
+    <div style="color: #ffffff;">
         <p><b>benGPT is a powerful AI assistant</b></p>
         <p>Designed to learn and assist you with various tasks.</p>
-
-        <p style="font-size: 16px; color: #6c63ff;"><b>Contact us:</b></p>
-        <p>Email: benjaminukaimo@gmail.com</p>
+        <p style="font-size: 16px;"><b>Contact us:</b></p>
+        <p>Email: <a href="mailto:benjaminukaimo@gmail.com" style="color: #ffffff;">benjaminukaimo@gmail.com</a></p>
         <p>Phone: +2347067193071</p>
     </div>
     """,
@@ -149,3 +159,13 @@ st.sidebar.markdown(
 )
 
 st.sidebar.button("Learn More", help="Discover more about benGPT")
+
+# Footer section
+st.markdown(
+    """
+    <footer>
+        © 2024 Benjitable DS - All Rights Reserved.
+    </footer>
+    """,
+    unsafe_allow_html=True,
+)
