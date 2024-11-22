@@ -17,7 +17,7 @@ st.markdown(
     <style>
         /* Background Image */
         .stApp {
-            background-image: url('image3.png'); /* Replace this with the path to your image */
+            background-image: url('https://github.com/benGPT/benGPT-special-chatbot-with-Groq-API/blob/c51104cc26152d5a9219e3f8f485779acf190766/image3.png'); /* Replace this with the path to your image */
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
