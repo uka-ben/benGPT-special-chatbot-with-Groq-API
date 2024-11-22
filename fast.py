@@ -9,7 +9,8 @@ from groq import Groq
 st.set_page_config(
     page_title="benGPT Chat",
     page_icon="🗼",
-    layout="centered"
+    layout="centered",
+    initial_sidebar_state="expanded"
 ) 
 
 # Retrieve API key
