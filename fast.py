@@ -95,3 +95,7 @@ st.sidebar.markdown(
 )
 
 st.sidebar.button("Learn More")
+
+st.sidebar.title("About benGPT")
+image5 = Image.open("image5.png")
+st.sidebar.image(image5, caption="benGPT", use_column_width=True)
