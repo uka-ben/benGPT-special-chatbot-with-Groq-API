@@ -3,7 +3,7 @@ import json
 from PIL import Image
 import streamlit as st
 from groq import Groq
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 
 # Streamlit page configuration
 st.set_page_config(
@@ -13,16 +13,20 @@ st.set_page_config(
 ) 
 
 # Retrieve API key
-load_dotenv()
-api_key = os.getenv("GROQ_API_KEY")
-if not api_key:
-    st.error("GROQ_API_KEY is not set in the .env file.")
-    st.stop()
+#load_dotenv()
+#api_key = os.getenv("GROQ_API_KEY")
+#if not api_key:
+   # st.error("GROQ_API_KEY is not set in the .env file.")
+   # st.stop()
 
 # Set the API key as an environment variable
-os.environ["GROQ_API_KEY"] = api_key
+#os.environ["GROQ_API_KEY"] = api_key
 #initialize groq
-client = Groq()
+#client = Groq()
+
+api_key = st.secrets["GROQ_API_KEY"]
+
+client = Groq(api_key=api_key)
 
 # Initialize the chat history as Streamlit session state if not present already
 if "chat_history" not in st.session_state:
