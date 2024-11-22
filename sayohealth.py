@@ -9,18 +9,10 @@ from dotenv import load_dotenv
 #create the streamlit configuration page
 st.set_page_config(page_title="SAYO HEALTH", layout= "centered", page_icon="👪")
 
-# Retrieve API key
-load_dotenv()
 
-api_key = os.getenv("GROQ_API_KEY")
-if not api_key:
-    st.error("GROQ_API_KEY is not set in the .env file.")
-    st.stop()
+api_key = st.secrets["GROQ_API_KEY"]
 
-# Set the API key as an environment variable
-os.environ["GROQ_API_KEY"] = api_key
-
-client = Groq()
+client = Groq(api_key=api_key)
 
 #initialize the chat history
 if "chat_history" not in st.session_state:

@@ -21,7 +21,7 @@ if not api_key:
 
 # Set the API key as an environment variable
 os.environ["GROQ_API_KEY"] = api_key
-#
+#initialize groq
 client = Groq()
 
 # Initialize the chat history as Streamlit session state if not present already
