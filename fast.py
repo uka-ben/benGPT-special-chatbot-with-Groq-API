@@ -13,6 +13,20 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 ) 
 
+
+# Custom CSS to restrict sidebar width
+st.markdown(
+    """
+    <style>
+    [data-testid="stSidebar"] {
+        width: 250px;  /* Adjust this value for desired width */
+        min-width: 250px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # Retrieve API key
 #load_dotenv()
 #api_key = os.getenv("GROQ_API_KEY")
