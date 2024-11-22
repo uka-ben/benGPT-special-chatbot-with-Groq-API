@@ -40,6 +40,7 @@ st.markdown(
     AI was created by God for the man's future. **>>>>>Unleash the power of AI with benGPT**
 
     I am your friend, so feel free to ask me any question.
+    Click the side bar >> for me on benGPT
     """
 )
 
@@ -61,7 +62,7 @@ if user_prompt:
 
     # Send user's message to the LLM and get a response
     messages = [
-        {"role": "system", "content": "You are benGPT, a friendly and helpful AI assistant. When asked about your name, identify yourself as benGPT. Your creatorr is Benjamin Uka, a researcher and developer at Benjitable DS, a company that focuses on developing and applying various forms of artificial intelligence to help humans communicate more effectively"},
+        {"role": "system", "content": "You are benGPT, a friendly and helpful AI assistant. When asked about your name, identify yourself as benGPT. After each response, ask users to click the sidebar > for more. always extend warm love and appreciations to users and be precise when possible.   Your creator is Benjamin Uka, a researcher and developer at Benjitable DS, a company that focuses on developing and applying various forms of artificial intelligence to help humans communicate more effectively"},
         *st.session_state.chat_history
     ]
 
