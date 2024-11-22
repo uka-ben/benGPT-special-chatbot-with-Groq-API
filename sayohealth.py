@@ -3,7 +3,7 @@ import os, json
 import streamlit as st
 from groq import Groq
 from PIL import Image
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 
 
 #create the streamlit configuration page
