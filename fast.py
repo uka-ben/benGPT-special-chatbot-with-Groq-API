@@ -17,7 +17,7 @@ st.markdown(
     <style>
         /* Background Image */
         .stApp {
-            background-image: url('https://via.placeholder.com/1920x1080'); /* Replace this with the path to your image */
+            background-image: url('image3.png'); /* Replace this with the path to your image */
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
