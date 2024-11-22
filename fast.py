@@ -41,7 +41,7 @@ st.markdown(
     AI was created by God for the man's future. **>>>>>Unleash the power of AI with benGPT**
 
     I am your friend, so feel free to ask me any question.
-    Click the side bar >> for me on benGPT
+    Click the side bar >> for more on benGPT
     """
 )
 
