@@ -6,67 +6,138 @@ from groq import Groq
 
 # Streamlit page configuration
 st.set_page_config(
-    page_title="Danmay Academy School Chat",
+    page_title="Danmay International Academy Chat",
     page_icon="🏫",
     layout="centered",
     initial_sidebar_state="expanded"
 ) 
 
-# Custom CSS to control the sidebar width
+# Custom CSS
 st.markdown(
     """
     <style>
     [data-testid="stSidebar"] {
-        width: 250px;  /* Adjust this value for desired width */
+        width: 250px;
         min-width: 250px;
+    }
+    .stButton>button {
+        background-color: #4CAF50;
+        color: white;
     }
     </style>
     """,
     unsafe_allow_html=True
 )
 
-# Initialize Groq client with API key
+# Initialize Groq client
 api_key = st.secrets["GROQ_API_KEY"]
 client = Groq(api_key=api_key)
 
-# Initialize the chat history as Streamlit session state if not present already
+# Initialize session state
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
+if "user_info" not in st.session_state:
+    st.session_state.user_info = None
 
-# Streamlit page title
-st.title("🏫 Danmay Academy School Assistant")
+# User information form
+if not st.session_state.user_info:
+    st.title("🏫 Danmay International Academy")
+    st.subheader("Please provide your information to continue")
+    
+    with st.form("user_info_form"):
+        age_range = st.selectbox(
+            "Age Range",
+            ["3-5 (Creche/Nursery)", "6-10 (Primary)", "11-16 (Secondary)"],
+            index=None,
+            placeholder="Select your age range..."
+        )
+        
+        gender = st.selectbox(
+            "Gender",
+            ["Male", "Female", "Prefer not to say"],
+            index=None,
+            placeholder="Select your gender..."
+        )
+        
+        class_level = st.selectbox(
+            "Class Level",
+            ["Creche", "Nursery 1", "Nursery 2", "Primary 1", "Primary 2", 
+             "Primary 3", "Primary 4", "Primary 5", "Primary 6", "JSS 1", 
+             "JSS 2", "JSS 3", "SSS 1", "SSS 2", "SSS 3"],
+            index=None,
+            placeholder="Select your class..."
+        )
+        
+        submitted = st.form_submit_button("Submit")
+        
+        if submitted:
+            if age_range and gender and class_level:
+                st.session_state.user_info = {
+                    "age_range": age_range,
+                    "gender": gender,
+                    "class_level": class_level
+                }
+                st.rerun()
+            else:
+                st.warning("Please fill in all fields")
 
-st.markdown(
-    """
-    Welcome to Danmay Academy's learning assistant! **>>>>>Your educational companion for nursery, primary, and secondary school learning<<<<<**
+    # School information in sidebar
+    st.sidebar.title("About Our School")
+    st.sidebar.markdown("""
+    **Danmay International Academy**  
+    Offering quality education from Creche to Secondary level.
+    
+    **Mission:** Providing safe, stimulating learning environment.
+    **Vision:** Excellence in morals, academics, and discipline.
+    """)
+    st.stop()
 
-    I'm here to help students with their studies, answer questions, and provide educational support.
-    Click the side bar >> for more information about our school.
-    """
-)
+# Main chat interface
+st.title(f"🏫 Danmay Academy Assistant - {st.session_state.user_info['class_level']}")
+st.markdown(f"""
+Welcome, {st.session_state.user_info['gender']} student from {st.session_state.user_info['class_level']}!
 
-# Load and display image
-image4 = Image.open("image4.png")
-st.image(image4, width=300, use_container_width=True)
+**This assistant is for educational purposes only.**  
+Please ask questions related to your studies.
+""")
 
 # Display chat history
 for message in st.session_state.chat_history:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# Input field for user's message
-user_prompt = st.chat_input("Ask your school assistant...")
+# Chat input
+user_prompt = st.chat_input("Ask your educational question...")
 
 if user_prompt:
+    # Add user message to chat
     st.chat_message("user").markdown(user_prompt)
     st.session_state.chat_history.append({"role": "user", "content": user_prompt})
 
-    # Send user's message to the LLM and get a response
+    # Prepare messages for LLM
     messages = [
-        {"role": "system", "content": "You are Danmay Academy's educational assistant, a friendly and helpful AI for students. Your purpose is to assist nursery, primary, and secondary school students with their learning. Be patient, encouraging, and adapt your explanations to the student's level. When asked about your name, identify yourself as Danmay Assistant. After each response, invite users to click the sidebar for more school information. Always maintain a professional yet warm tone suitable for educational settings."},
+        {
+            "role": "system", 
+            "content": f"""You are Danmay International Academy's educational assistant for a {st.session_state.user_info['age_range']} student in {st.session_state.user_info['class_level']}.
+            
+            STRICT RULES:
+            1. ONLY respond to educational questions related to school subjects, homework, or school activities
+            2. For non-educational questions, respond: "I'm sorry, I can only assist with educational matters. Please ask about your school work or subjects."
+            3. Maintain a professional, encouraging tone suitable for {st.session_state.user_info['age_range']} students
+            4. Adapt explanations to {st.session_state.user_info['class_level']} level
+            5. Never provide personal opinions or non-educational advice
+            
+            Current Subjects (adjust based on class level):
+            - Nursery: Literacy, Numeracy, Social Habits
+            - Primary: English, Math, Science, Social Studies
+            - Secondary: English, Math, Sciences, Humanities
+            
+            School Values: Excellence, Discipline, Moral Values"""
+        },
         *st.session_state.chat_history
     ]
 
+    # Get LLM response
     response = client.chat.completions.create(
         model="llama3-8b-8192",
         messages=messages
@@ -75,36 +146,27 @@ if user_prompt:
     assistant_response = response.choices[0].message.content
     st.session_state.chat_history.append({"role": "assistant", "content": assistant_response})
 
-    # Display the LLM's response
+    # Display response
     with st.chat_message("assistant"):
         st.markdown(assistant_response)
 
-# Add a sidebar with school information
-st.sidebar.title("About Danmay Academy")
-image2 = Image.open("image2.png")
-st.sidebar.image(image2, caption="Danmay Academy", use_container_width=True)
+# Sidebar information
+st.sidebar.title("Student Information")
+st.sidebar.write(f"""
+**Age Range:** {st.session_state.user_info['age_range']}  
+**Gender:** {st.session_state.user_info['gender']}  
+**Class:** {st.session_state.user_info['class_level']}
+""")
 
-st.sidebar.markdown(
-    """
-    **Danmay Academy** is a premier educational institution offering:
-    - Nursery School
-    - Primary Education
-    - Secondary School
-    
-    Our mission is to provide quality education in a nurturing environment.
-    
-    **School Hours:**
-    Monday-Friday: 8:00 AM - 3:00 PM
-    
-    **Contact us:**
-    - Email: info@danmayacademy.edu
-    - Phone: +234123456789
-    - Address: 123 Education Street, Learning City
-    """
-)
+st.sidebar.markdown("---")
+st.sidebar.title("School Contacts")
+st.sidebar.markdown("""
+- Email: danmayinternational.com.ng  
+- Phone: 08038965253, 09051906862  
+- Address: Opposite UDSS, Camp David Street, Aluu, Port Harcourt
+""")
 
-st.sidebar.button("School Calendar")
-
-st.sidebar.title("Our Facilities")
-image5 = Image.open("image5.png")
-st.sidebar.image(image5, caption="School Library", use_container_width=True)
+# Reset button
+if st.sidebar.button("Change Student Information"):
+    st.session_state.user_info = None
+    st.rerun()
