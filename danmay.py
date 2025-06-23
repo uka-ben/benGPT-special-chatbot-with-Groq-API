@@ -1,8 +1,8 @@
-import os
-import json
-from PIL import Image
 import streamlit as st
 from groq import Groq
+from PIL import Image
+import requests
+from io import BytesIO
 
 # Streamlit page configuration
 st.set_page_config(
@@ -10,90 +10,171 @@ st.set_page_config(
     page_icon="🏫",
     layout="wide",
     initial_sidebar_state="expanded"
-) 
+)
 
-# Custom CSS for enhanced styling
+# Load logo from repository
+def load_logo():
+    try:
+        logo_url = "https://raw.githubusercontent.com/uka-ben/benGPT-special-chatbot-with-Groq-API/blob/master/danmaylogo.png"
+        response = requests.get(logo_url)
+        logo = Image.open(BytesIO(response.content))
+        return logo
+    except:
+        return None
+
+# Custom CSS with all requested changes
 st.markdown("""
 <style>
+    /* Hide all Streamlit default elements */
+    header {visibility: hidden;}
+    footer {visibility: hidden;}
+    #MainMenu {visibility: hidden;}
+    
+    /* Color variables */
     :root {
         --primary: #2E86AB;
         --secondary: #F18F01;
         --accent: #A23B72;
         --light: #F7F7FF;
         --dark: #2B2D42;
+        --card-bg: #FFFFFF;
+        --sidebar-bg: #F0F2F6;
+        --text-dark: #333333;
     }
     
+    /* Main app styling */
     [data-testid="stAppViewContainer"] {
         background-color: var(--light);
     }
     
+    /* Sidebar styling - now with dark text */
     [data-testid="stSidebar"] {
-        background-color: var(--primary) !important;
-        color: white;
+        background-color: var(--sidebar-bg) !important;
+        border-right: 1px solid #E0E0E0;
+        color: var(--text-dark) !important;
     }
     
+    /* Chat message styling */
     .stChatMessage {
         border-radius: 15px;
         padding: 12px;
         margin: 8px 0;
-    }
-    
-    [data-testid="stChatMessageContent"] {
-        font-size: 1.1rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     
     .user-message {
         background-color: var(--secondary) !important;
         color: white;
+        border-left: 5px solid #D97B00;
     }
     
     .assistant-message {
         background-color: var(--primary) !important;
         color: white;
+        border-left: 5px solid #1C5D7F;
     }
     
+    /* Button styling */
     .stButton>button {
         background-color: var(--accent) !important;
         color: white !important;
         border-radius: 8px;
         padding: 8px 16px;
         font-weight: bold;
+        transition: all 0.3s;
     }
     
-    .stSelectbox, .stTextInput {
-        border-radius: 8px;
+    .stButton>button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
     
-    .header {
-        color: var(--primary);
+    /* Header styling */
+    .header-container {
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        color: white;
+        padding: 1.5rem;
+        border-radius: 0 0 15px 15px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
         text-align: center;
-        padding: 1rem;
-        background: linear-gradient(90deg, var(--primary), var(--accent));
-        border-radius: 10px;
-        margin-bottom: 1rem;
     }
     
+    /* Card styling */
     .welcome-card {
-        background-color: white;
+        background-color: var(--card-bg);
         border-radius: 15px;
         padding: 1.5rem;
         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         margin-bottom: 1.5rem;
+        border-left: 5px solid var(--accent);
     }
     
     .info-card {
-        background-color: white;
+        background-color: var(--card-bg);
         border-radius: 15px;
         padding: 1rem;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         margin-bottom: 1rem;
+        border-left: 3px solid var(--secondary);
+        color: var(--text-dark);
     }
     
+    /* Sidebar title - now with dark text */
     .sidebar-title {
-        color: white !important;
-        font-size: 1.5rem !important;
+        color: var(--text-dark) !important;
+        font-size: 1.3rem !important;
         text-align: center;
         margin-bottom: 1rem;
+        font-weight: bold;
+        border-bottom: 2px solid var(--secondary);
+        padding-bottom: 0.5rem;
+    }
+    
+    /* Logo styling */
+    .logo-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+    
+    .logo-img {
+        max-width: 180px;
+        height: auto;
+    }
+    
+    /* Badge styling */
+    .badge {
+        background-color: var(--accent);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        display: inline-block;
+    }
+    
+    /* Subject tags */
+    .subject-tag {
+        background-color: var(--primary);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.7rem;
+        margin-right: 5px;
+        margin-bottom: 5px;
+        display: inline-block;
+    }
+    
+    /* Links styling */
+    .sidebar-link {
+        color: var(--accent) !important;
+        text-decoration: none !important;
+        transition: color 0.3s;
+    }
+    
+    .sidebar-link:hover {
+        color: var(--primary) !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -110,14 +191,23 @@ if "user_info" not in st.session_state:
 
 # School logo and header
 def render_header():
-    col1, col2, col3 = st.columns([1, 3, 1])
-    with col2:
-        st.markdown("""
-        <div class="header">
-            <h1 style="color: white; margin: 0;">🏫 Danmay International Academy</h1>
-            <p style="color: white; margin: 0;">Excellence in Education</p>
+    logo = load_logo()
+    st.markdown("""
+    <div class="header-container">
+        <div class="logo-container">
+    """, unsafe_allow_html=True)
+    
+    if logo:
+        st.image(logo, width=180)
+    else:
+        st.markdown("🏫", unsafe_allow_html=True)
+    
+    st.markdown("""
         </div>
-        """, unsafe_allow_html=True)
+        <h1 style="margin: 0; color: white;">Danmay International Academy</h1>
+        <p style="margin: 0; color: white; opacity: 0.9;">Excellence in Education from Creche to Secondary</p>
+    </div>
+    """, unsafe_allow_html=True)
 
 # User information form
 if not st.session_state.user_info:
@@ -129,7 +219,7 @@ if not st.session_state.user_info:
             with st.form("user_info_form"):
                 st.markdown("""
                 <div class="welcome-card">
-                    <h3 style="color: var(--primary); text-align: center;">Welcome to Our Learning Assistant</h3>
+                    <h3 style="color: var(--primary); text-align: center;">🎓 Welcome to Our Learning Assistant</h3>
                     <p style="text-align: center;">Please provide your information to continue</p>
                 </div>
                 """, unsafe_allow_html=True)
@@ -158,7 +248,7 @@ if not st.session_state.user_info:
                         placeholder="Select your class..."
                     )
                     
-                    submitted = st.form_submit_button("👉 Begin Learning", use_container_width=True)
+                    submitted = st.form_submit_button("🚀 Begin Learning", use_container_width=True)
                     
                     if submitted:
                         if age_range and gender and class_level:
@@ -177,7 +267,7 @@ if not st.session_state.user_info:
         st.markdown("""
         <div class="info-card">
             <p><strong>🏆 Premier Education:</strong><br>
-            Creche to Secondary level</p>
+            From Creche to Secondary level</p>
             <p><strong>🌟 Mission:</strong><br>
             Safe, stimulating learning environment</p>
             <p><strong>✨ Vision:</strong><br>
@@ -194,11 +284,21 @@ st.markdown(f"""
 <div class="welcome-card">
     <div style="display: flex; justify-content: space-between; align-items: center;">
         <div>
-            <h3 style="color: var(--primary); margin: 0;">Welcome, {st.session_state.user_info['gender']} student!</h3>
-            <p style="margin: 0;">Class: {st.session_state.user_info['class_level']} | Age: {st.session_state.user_info['age_range']}</p>
+            <h3 style="color: var(--primary); margin: 0;">👋 Welcome, {st.session_state.user_info['gender']} student!</h3>
+            <p style="margin: 0;">📚 Class: {st.session_state.user_info['class_level']} | 📏 Age: {st.session_state.user_info['age_range']}</p>
         </div>
-        <div style="background-color: var(--primary); color: white; padding: 8px 16px; border-radius: 20px;">
+        <div class="badge">
             🎓 Learning Mode
+        </div>
+    </div>
+    <div style="margin-top: 1rem;">
+        <p style="margin: 0.5rem 0; font-weight: bold;">📖 Suggested Subjects:</p>
+        <div>
+            <span class="subject-tag">English</span>
+            <span class="subject-tag">Mathematics</span>
+            <span class="subject-tag">Science</span>
+            <span class="subject-tag">Social Studies</span>
+            <span class="subject-tag">Moral Instruction</span>
         </div>
     </div>
 </div>
@@ -210,7 +310,7 @@ for message in st.session_state.chat_history:
         st.markdown(f"""
         <div class="stChatMessage user-message">
             <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="font-weight: bold;">You:</div>
+                <div style="font-weight: bold; font-size: 1.2rem;">👤 You:</div>
                 <div>{message["content"]}</div>
             </div>
         </div>
@@ -219,7 +319,7 @@ for message in st.session_state.chat_history:
         st.markdown(f"""
         <div class="stChatMessage assistant-message">
             <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="font-weight: bold;">Assistant:</div>
+                <div style="font-weight: bold; font-size: 1.2rem;">🏫 Assistant:</div>
                 <div>{message["content"]}</div>
             </div>
         </div>
@@ -273,15 +373,17 @@ with st.sidebar:
         <p><strong>👤 Student:</strong> {st.session_state.user_info['gender']}</p>
         <p><strong>📏 Age Range:</strong> {st.session_state.user_info['age_range']}</p>
         <p><strong>🏫 Class:</strong> {st.session_state.user_info['class_level']}</p>
+        <p><strong>📅 Last Active:</strong> Now</p>
     </div>
     """, unsafe_allow_html=True)
     
     st.markdown('<p class="sidebar-title">Quick Links</p>', unsafe_allow_html=True)
     st.markdown("""
     <div class="info-card">
-        <p><a href="#" style="color: var(--accent);">📚 School Portal</a></p>
-        <p><a href="#" style="color: var(--accent);">🗓️ Academic Calendar</a></p>
-        <p><a href="#" style="color: var(--accent);">📝 Homework Help</a></p>
+        <p><a href="#" class="sidebar-link">📚 School Portal</a></p>
+        <p><a href="#" class="sidebar-link">🗓️ Academic Calendar</a></p>
+        <p><a href="#" class="sidebar-link">📝 Homework Help</a></p>
+        <p><a href="#" class="sidebar-link">🏆 Student Resources</a></p>
     </div>
     """, unsafe_allow_html=True)
     
