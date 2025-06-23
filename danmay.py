@@ -8,8 +8,15 @@ st.set_page_config(
     page_title="Danmay International Academy",
     page_icon="🏫",
     layout="wide",
-    initial_sidebar_state="expanded"
 )
+
+# Hide header and footer
+st.markdown("""
+<style>
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+</style>
+""", unsafe_allow_html=True)
 
 # Load logo from root directory
 def load_logo():
@@ -22,37 +29,18 @@ def load_logo():
         st.error(f"Error loading logo: {e}")
         return None
 
-# Custom CSS with all requested styling
+# Custom CSS for main page
 st.markdown("""
 <style>
-    /* Hide header and footer */
-    footer {
-        visibility: hidden;
-    }
-    header {
-        visibility: hidden;
-    }
-    
-    /* Show sidebar expander */
-    [data-testid="collapsedControl"] {
-        display: block !important;
-        color: black !important;
-    }
-    
     /* Main app styling */
     [data-testid="stAppViewContainer"] {
         background-color: #FFFFFF;
-    }
-    
-    /* Sidebar styling */
-    [data-testid="stSidebar"] {
-        background-color: white !important;
-        border-right: 1px solid #e0e0e0;
+        padding: 2rem;
     }
     
     /* Ensure all text is black */
     body, .stTextInput>div>div>input, .stSelectbox>div>div>select, 
-    .stTextArea>div>div>textarea, [data-testid="stSidebar"] * {
+    .stTextArea>div>div>textarea {
         color: black !important;
     }
     
@@ -89,7 +77,7 @@ st.markdown("""
         background: linear-gradient(135deg, #2E86AB, #A23B72);
         color: white;
         padding: 1.5rem;
-        border-radius: 0 0 15px 15px;
+        border-radius: 10px;
         margin-bottom: 2rem;
         text-align: center;
     }
@@ -101,19 +89,12 @@ st.markdown("""
         border-radius: 8px;
         padding: 8px 16px;
         font-weight: bold;
-        transition: all 0.3s;
-    }
-    
-    .stButton>button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
     
     /* Title styling */
-    .sidebar-title {
+    .section-title {
         color: black !important;
         font-size: 1.3rem !important;
-        text-align: center;
         margin-bottom: 1rem;
         font-weight: bold;
         border-bottom: 2px solid #F18F01;
@@ -151,6 +132,23 @@ st.markdown("""
         margin-right: 5px;
         margin-bottom: 5px;
         display: inline-block;
+    }
+    
+    /* Contact info styling */
+    .contact-info {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+    
+    .contact-card {
+        background-color: white;
+        border-radius: 10px;
+        padding: 1rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        flex: 1;
+        min-width: 200px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -237,19 +235,35 @@ if not st.session_state.user_info:
                         else:
                             st.warning("Please fill in all fields")
 
-    # School information in sidebar
-    with st.sidebar:
-        st.markdown('<p class="sidebar-title">About Our School</p>', unsafe_allow_html=True)
-        st.markdown("""
-        <div class="info-card">
-            <p><strong>🏆 Premier Education:</strong><br>
-            From Creche to Secondary level</p>
-            <p><strong>🌟 Mission:</strong><br>
-            Safe, stimulating learning environment</p>
-            <p><strong>✨ Vision:</strong><br>
-            Excellence in morals, academics, discipline</p>
+    # School information section
+    st.markdown('<p class="section-title">About Our School</p>', unsafe_allow_html=True)
+    st.markdown("""
+    <div class="info-card">
+        <p><strong>🏆 Premier Education:</strong><br>
+        From Creche to Secondary level</p>
+        <p><strong>🌟 Mission:</strong><br>
+        Safe, stimulating learning environment</p>
+        <p><strong>✨ Vision:</strong><br>
+        Excellence in morals, academics, discipline</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Contact information section
+    st.markdown('<p class="section-title">Contact Information</p>', unsafe_allow_html=True)
+    st.markdown("""
+    <div class="contact-info">
+        <div class="contact-card">
+            <p><strong>📧 Email:</strong><br>danmayinternational.com.ng</p>
         </div>
-        """, unsafe_allow_html=True)
+        <div class="contact-card">
+            <p><strong>📞 Phone:</strong><br>08038965253<br>09051906862</p>
+        </div>
+        <div class="contact-card">
+            <p><strong>🏠 Address:</strong><br>Opposite UDSS, Camp David Street, Aluu, Port Harcourt</p>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
     st.stop()
 
 # Main chat interface
@@ -341,38 +355,36 @@ if user_prompt:
     st.session_state.chat_history.append({"role": "assistant", "content": assistant_response})
     st.rerun()
 
-# Sidebar information
-with st.sidebar:
-    st.markdown('<p class="sidebar-title">Student Profile</p>', unsafe_allow_html=True)
-    st.markdown(f"""
-    <div class="info-card">
-        <p><strong>👤 Student:</strong> {st.session_state.user_info['gender']}</p>
-        <p><strong>📏 Age Range:</strong> {st.session_state.user_info['age_range']}</p>
-        <p><strong>🏫 Class:</strong> {st.session_state.user_info['class_level']}</p>
-        <p><strong>📅 Last Active:</strong> Now</p>
+# School information section (shown after chat starts)
+st.markdown('<p class="section-title">About Our School</p>', unsafe_allow_html=True)
+st.markdown("""
+<div class="info-card">
+    <p><strong>🏆 Premier Education:</strong><br>
+    From Creche to Secondary level</p>
+    <p><strong>🌟 Mission:</strong><br>
+    Safe, stimulating learning environment</p>
+    <p><strong>✨ Vision:</strong><br>
+    Excellence in morals, academics, discipline</p>
+</div>
+""", unsafe_allow_html=True)
+
+# Contact information section
+st.markdown('<p class="section-title">Contact Information</p>', unsafe_allow_html=True)
+st.markdown("""
+<div class="contact-info">
+    <div class="contact-card">
+        <p><strong>📧 Email:</strong><br>danmayinternational.com.ng</p>
     </div>
-    """, unsafe_allow_html=True)
-    
-    st.markdown('<p class="sidebar-title">Quick Links</p>', unsafe_allow_html=True)
-    st.markdown("""
-    <div class="info-card">
-        <p><a href="#" style="color: #A23B72 !important; text-decoration: none;">📚 School Portal</a></p>
-        <p><a href="#" style="color: #A23B72 !important; text-decoration: none;">🗓️ Academic Calendar</a></p>
-        <p><a href="#" style="color: #A23B72 !important; text-decoration: none;">📝 Homework Help</a></p>
-        <p><a href="#" style="color: #A23B72 !important; text-decoration: none;">🏆 Student Resources</a></p>
+    <div class="contact-card">
+        <p><strong>📞 Phone:</strong><br>08038965253<br>09051906862</p>
     </div>
-    """, unsafe_allow_html=True)
-    
-    st.markdown('<p class="sidebar-title">School Contacts</p>', unsafe_allow_html=True)
-    st.markdown("""
-    <div class="info-card">
-        <p>📧 danmayinternational.com.ng</p>
-        <p>📞 08038965253</p>
-        <p>📞 09051906862</p>
-        <p>🏠 Opposite UDSS, Camp David Street, Aluu</p>
+    <div class="contact-card">
+        <p><strong>🏠 Address:</strong><br>Opposite UDSS, Camp David Street, Aluu, Port Harcourt</p>
     </div>
-    """, unsafe_allow_html=True)
-    
-    if st.button("🔄 Change Student Information", use_container_width=True):
-        st.session_state.user_info = None
-        st.rerun()
+</div>
+""", unsafe_allow_html=True)
+
+# Change student information button
+if st.button("🔄 Change Student Information", use_container_width=True):
+    st.session_state.user_info = None
+    st.rerun()
