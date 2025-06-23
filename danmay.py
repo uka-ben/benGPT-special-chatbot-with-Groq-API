@@ -3,7 +3,7 @@ from groq import Groq
 from PIL import Image
 import os
 
-# Streamlit page configuration
+# Streamlit page configuration - hide all Streamlit branding
 st.set_page_config(
     page_title="Danmay International Academy",
     page_icon="🏫",
@@ -11,12 +11,30 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Custom CSS to hide header/footer and style elements
+# Custom CSS to hide ALL Streamlit branding and style elements
 st.markdown("""
 <style>
-    /* Hide header and footer */
+    /* Hide ALL Streamlit branding elements */
     footer {visibility: hidden;}
     header {visibility: hidden;}
+    .st-emotion-cache-1wbqy5l {display: none;}
+    .st-emotion-cache-h5rgaw {visibility: hidden;}
+    
+    /* Hide the 'Made with Streamlit' footer */
+    .reportview-container .main footer {visibility: hidden;}
+    .reportview-container .main footer:after {
+        content: "";
+        visibility: hidden;
+    }
+    
+    /* Hide hamburger menu */
+    #MainMenu {visibility: hidden;}
+    
+    /* Hide decorative elements */
+    .stDecoration {display: none;}
+    
+    /* Hide the Streamlit toolbar */
+    .stToolbar {display: none;}
     
     /* Main content styling */
     [data-testid="stAppViewContainer"] {
@@ -61,14 +79,6 @@ st.markdown("""
     .header-container {
         text-align: center;
         margin-bottom: 2rem;
-    }
-    
-    /* Section title styling */
-    .section-title {
-        color: #2E86AB;
-        border-bottom: 2px solid #F18F01;
-        padding-bottom: 0.5rem;
-        margin-top: 2rem;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -160,9 +170,9 @@ if not st.session_state.user_info:
                     st.warning("Please fill in all fields")
 
     # School information section (only shown before chat starts)
-    st.markdown('<h3 class="section-title">About Our School</h3>', unsafe_allow_html=True)
     st.markdown("""
     <div class="info-card">
+        <h3 style="color: #2E86AB; border-bottom: 2px solid #F18F01; padding-bottom: 0.5rem;">About Our School</h3>
         <p><strong>🏆 Premier Education:</strong><br>
         From Creche to Secondary level</p>
         <p><strong>🌟 Mission:</strong><br>
@@ -173,9 +183,9 @@ if not st.session_state.user_info:
     """, unsafe_allow_html=True)
     
     # Contact information section (only shown before chat starts)
-    st.markdown('<h3 class="section-title">Contact Information</h3>', unsafe_allow_html=True)
     st.markdown("""
     <div class="info-card">
+        <h3 style="color: #2E86AB; border-bottom: 2px solid #F18F01; padding-bottom: 0.5rem;">Contact Information</h3>
         <p>📧 danmayinternational.com.ng</p>
         <p>📞 08038965253</p>
         <p>📞 09051906862</p>
