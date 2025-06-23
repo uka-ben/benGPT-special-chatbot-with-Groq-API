@@ -1,8 +1,7 @@
 import streamlit as st
 from groq import Groq
 from PIL import Image
-import requests
-from io import BytesIO
+import os
 
 # Streamlit page configuration
 st.set_page_config(
@@ -12,14 +11,15 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Load logo from repository
+# Load logo from root directory
 def load_logo():
     try:
-        logo_url = "https://raw.githubusercontent.com/uka-ben/benGPT-special-chatbot-with-Groq-API/blob/master/danmaylogo.png"
-        response = requests.get(logo_url)
-        logo = Image.open(BytesIO(response.content))
+        logo = Image.open("danmaylogo.png")
         return logo
-    except:
+    except FileNotFoundError:
+        return None
+    except Exception as e:
+        st.error(f"Error loading logo: {e}")
         return None
 
 # Custom CSS with all requested changes
@@ -208,6 +208,10 @@ def render_header():
         <p style="margin: 0; color: white; opacity: 0.9;">Excellence in Education from Creche to Secondary</p>
     </div>
     """, unsafe_allow_html=True)
+
+# [Rest of your code remains exactly the same as in the previous version]
+# [Include all the remaining code from the previous implementation]
+# [The only change is in the load_logo() function at the top]
 
 # User information form
 if not st.session_state.user_info:
