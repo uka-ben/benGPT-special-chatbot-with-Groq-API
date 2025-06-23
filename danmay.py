@@ -7,50 +7,30 @@ import os
 st.set_page_config(
     page_title="Danmay International Academy",
     page_icon="🏫",
-    layout="wide",
+    layout="centered",
+    initial_sidebar_state="collapsed"
 )
 
-# Hide header and footer
+# Custom CSS to hide header/footer and style elements
 st.markdown("""
 <style>
+    /* Hide header and footer */
     footer {visibility: hidden;}
     header {visibility: hidden;}
-</style>
-""", unsafe_allow_html=True)
-
-# Load logo from root directory
-def load_logo():
-    try:
-        logo = Image.open("danmaylogo.png")
-        return logo
-    except FileNotFoundError:
-        return None
-    except Exception as e:
-        st.error(f"Error loading logo: {e}")
-        return None
-
-# Custom CSS for main page
-st.markdown("""
-<style>
-    /* Main app styling */
+    
+    /* Main content styling */
     [data-testid="stAppViewContainer"] {
         background-color: #FFFFFF;
         padding: 2rem;
-    }
-    
-    /* Ensure all text is black */
-    body, .stTextInput>div>div>input, .stSelectbox>div>div>select, 
-    .stTextArea>div>div>textarea {
-        color: black !important;
     }
     
     /* Card styling */
     .info-card {
         background-color: white;
         border-radius: 10px;
-        padding: 15px;
-        margin-bottom: 15px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        padding: 1.5rem;
+        margin: 1rem 0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         border-left: 4px solid #2E86AB;
     }
     
@@ -59,7 +39,6 @@ st.markdown("""
         border-radius: 15px;
         padding: 12px;
         margin: 8px 0;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     
     .user-message {
@@ -72,83 +51,24 @@ st.markdown("""
         color: white !important;
     }
     
-    /* Header styling */
-    .header-container {
-        background: linear-gradient(135deg, #2E86AB, #A23B72);
-        color: white;
-        padding: 1.5rem;
-        border-radius: 10px;
-        margin-bottom: 2rem;
-        text-align: center;
-    }
-    
     /* Button styling */
     .stButton>button {
         background-color: #A23B72 !important;
         color: white !important;
-        border-radius: 8px;
-        padding: 8px 16px;
-        font-weight: bold;
     }
     
-    /* Title styling */
+    /* Header styling */
+    .header-container {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    /* Section title styling */
     .section-title {
-        color: black !important;
-        font-size: 1.3rem !important;
-        margin-bottom: 1rem;
-        font-weight: bold;
+        color: #2E86AB;
         border-bottom: 2px solid #F18F01;
         padding-bottom: 0.5rem;
-    }
-    
-    /* Welcome card styling */
-    .welcome-card {
-        background-color: white;
-        border-radius: 15px;
-        padding: 1.5rem;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        margin-bottom: 1.5rem;
-        border-left: 5px solid #A23B72;
-    }
-    
-    /* Badge styling */
-    .badge {
-        background-color: #A23B72;
-        color: white;
-        padding: 6px 12px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: bold;
-        display: inline-block;
-    }
-    
-    /* Subject tags */
-    .subject-tag {
-        background-color: #2E86AB;
-        color: white;
-        padding: 4px 8px;
-        border-radius: 12px;
-        font-size: 0.7rem;
-        margin-right: 5px;
-        margin-bottom: 5px;
-        display: inline-block;
-    }
-    
-    /* Contact info styling */
-    .contact-info {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 2rem;
         margin-top: 2rem;
-    }
-    
-    .contact-card {
-        background-color: white;
-        border-radius: 10px;
-        padding: 1rem;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        flex: 1;
-        min-width: 200px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -163,13 +83,21 @@ if "chat_history" not in st.session_state:
 if "user_info" not in st.session_state:
     st.session_state.user_info = None
 
+# Load logo from root directory
+def load_logo():
+    try:
+        logo = Image.open("danmaylogo.png")
+        return logo
+    except FileNotFoundError:
+        return None
+    except Exception as e:
+        st.error(f"Error loading logo: {e}")
+        return None
+
 # School logo and header
 def render_header():
     logo = load_logo()
-    st.markdown("""
-    <div class="header-container">
-        <div style="display: flex; justify-content: center; margin-bottom: 1rem;">
-    """, unsafe_allow_html=True)
+    st.markdown('<div class="header-container">', unsafe_allow_html=True)
     
     if logo:
         st.image(logo, width=180)
@@ -177,10 +105,9 @@ def render_header():
         st.markdown("🏫", unsafe_allow_html=True)
     
     st.markdown("""
+        <h1 style="color: #2E86AB;">Danmay International Academy</h1>
+        <p style="color: #555555;">Excellence in Education from Creche to Secondary</p>
         </div>
-        <h1 style="margin: 0; color: white !important;">Danmay International Academy</h1>
-        <p style="margin: 0; color: white !important; opacity: 0.9;">Excellence in Education from Creche to Secondary</p>
-    </div>
     """, unsafe_allow_html=True)
 
 # User information form
@@ -188,55 +115,52 @@ if not st.session_state.user_info:
     render_header()
     
     with st.container():
-        col1, col2, col3 = st.columns([1, 2, 1])
-        with col2:
-            with st.form("user_info_form"):
-                st.markdown("""
-                <div class="welcome-card">
-                    <h3 style="color: #2E86AB; text-align: center;">🎓 Welcome to Our Learning Assistant</h3>
-                    <p style="text-align: center; color: black;">Please provide your information to continue</p>
-                </div>
-                """, unsafe_allow_html=True)
-                
-                with st.container():
-                    age_range = st.selectbox(
-                        "📏 Age Range",
-                        ["3-5 (Creche/Nursery)", "6-10 (Primary)", "11-16 (Secondary)"],
-                        index=None,
-                        placeholder="Select your age range..."
-                    )
-                    
-                    gender = st.selectbox(
-                        "👦👧 Gender",
-                        ["Male", "Female", "Prefer not to say"],
-                        index=None,
-                        placeholder="Select your gender..."
-                    )
-                    
-                    class_level = st.selectbox(
-                        "📚 Class Level",
-                        ["Creche", "Nursery 1", "Nursery 2", "Primary 1", "Primary 2", 
-                         "Primary 3", "Primary 4", "Primary 5", "Primary 6", "JSS 1", 
-                         "JSS 2", "JSS 3", "SSS 1", "SSS 2", "SSS 3"],
-                        index=None,
-                        placeholder="Select your class..."
-                    )
-                    
-                    submitted = st.form_submit_button("🚀 Begin Learning", use_container_width=True)
-                    
-                    if submitted:
-                        if age_range and gender and class_level:
-                            st.session_state.user_info = {
-                                "age_range": age_range,
-                                "gender": gender,
-                                "class_level": class_level
-                            }
-                            st.rerun()
-                        else:
-                            st.warning("Please fill in all fields")
+        with st.form("user_info_form"):
+            st.markdown("""
+            <div class="info-card">
+                <h3 style="color: #2E86AB; text-align: center;">🎓 Welcome to Our Learning Assistant</h3>
+                <p style="text-align: center;">Please provide your information to continue</p>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            age_range = st.selectbox(
+                "📏 Age Range",
+                ["3-5 (Creche/Nursery)", "6-10 (Primary)", "11-16 (Secondary)"],
+                index=None,
+                placeholder="Select your age range..."
+            )
+            
+            gender = st.selectbox(
+                "👦👧 Gender",
+                ["Male", "Female", "Prefer not to say"],
+                index=None,
+                placeholder="Select your gender..."
+            )
+            
+            class_level = st.selectbox(
+                "📚 Class Level",
+                ["Creche", "Nursery 1", "Nursery 2", "Primary 1", "Primary 2", 
+                 "Primary 3", "Primary 4", "Primary 5", "Primary 6", "JSS 1", 
+                 "JSS 2", "JSS 3", "SSS 1", "SSS 2", "SSS 3"],
+                index=None,
+                placeholder="Select your class..."
+            )
+            
+            submitted = st.form_submit_button("🚀 Begin Learning", use_container_width=True)
+            
+            if submitted:
+                if age_range and gender and class_level:
+                    st.session_state.user_info = {
+                        "age_range": age_range,
+                        "gender": gender,
+                        "class_level": class_level
+                    }
+                    st.rerun()
+                else:
+                    st.warning("Please fill in all fields")
 
     # School information section
-    st.markdown('<p class="section-title">About Our School</p>', unsafe_allow_html=True)
+    st.markdown('<h3 class="section-title">About Our School</h3>', unsafe_allow_html=True)
     st.markdown("""
     <div class="info-card">
         <p><strong>🏆 Premier Education:</strong><br>
@@ -249,18 +173,13 @@ if not st.session_state.user_info:
     """, unsafe_allow_html=True)
     
     # Contact information section
-    st.markdown('<p class="section-title">Contact Information</p>', unsafe_allow_html=True)
+    st.markdown('<h3 class="section-title">Contact Information</h3>', unsafe_allow_html=True)
     st.markdown("""
-    <div class="contact-info">
-        <div class="contact-card">
-            <p><strong>📧 Email:</strong><br>danmayinternational.com.ng</p>
-        </div>
-        <div class="contact-card">
-            <p><strong>📞 Phone:</strong><br>08038965253<br>09051906862</p>
-        </div>
-        <div class="contact-card">
-            <p><strong>🏠 Address:</strong><br>Opposite UDSS, Camp David Street, Aluu, Port Harcourt</p>
-        </div>
+    <div class="info-card">
+        <p>📧 danmayinternational.com.ng</p>
+        <p>📞 08038965253</p>
+        <p>📞 09051906862</p>
+        <p>🏠 Opposite UDSS, Camp David Street, Aluu</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -269,26 +188,25 @@ if not st.session_state.user_info:
 # Main chat interface
 render_header()
 
-# Student info card
+# Student info section
 st.markdown(f"""
-<div class="welcome-card">
+<div class="info-card">
     <div style="display: flex; justify-content: space-between; align-items: center;">
         <div>
             <h3 style="color: #2E86AB; margin: 0;">👋 Welcome, {st.session_state.user_info['gender']} student!</h3>
-            <p style="margin: 0; color: black;">📚 Class: {st.session_state.user_info['class_level']} | 📏 Age: {st.session_state.user_info['age_range']}</p>
+            <p style="margin: 0;">📚 Class: {st.session_state.user_info['class_level']} | 📏 Age: {st.session_state.user_info['age_range']}</p>
         </div>
-        <div class="badge">
+        <div style="background-color: #A23B72; color: white; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem;">
             🎓 Learning Mode
         </div>
     </div>
     <div style="margin-top: 1rem;">
-        <p style="margin: 0.5rem 0; font-weight: bold; color: black;">📖 Suggested Subjects:</p>
+        <p style="margin: 0.5rem 0; font-weight: bold;">📖 Suggested Subjects:</p>
         <div>
-            <span class="subject-tag">English</span>
-            <span class="subject-tag">Mathematics</span>
-            <span class="subject-tag">Science</span>
-            <span class="subject-tag">Social Studies</span>
-            <span class="subject-tag">Moral Instruction</span>
+            <span style="background-color: #2E86AB; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.7rem; margin-right: 5px; display: inline-block;">English</span>
+            <span style="background-color: #2E86AB; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.7rem; margin-right: 5px; display: inline-block;">Mathematics</span>
+            <span style="background-color: #2E86AB; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.7rem; margin-right: 5px; display: inline-block;">Science</span>
+            <span style="background-color: #2E86AB; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.7rem; margin-right: 5px; display: inline-block;">Social Studies</span>
         </div>
     </div>
 </div>
@@ -356,7 +274,7 @@ if user_prompt:
     st.rerun()
 
 # School information section (shown after chat starts)
-st.markdown('<p class="section-title">About Our School</p>', unsafe_allow_html=True)
+st.markdown('<h3 class="section-title">About Our School</h3>', unsafe_allow_html=True)
 st.markdown("""
 <div class="info-card">
     <p><strong>🏆 Premier Education:</strong><br>
@@ -369,18 +287,13 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Contact information section
-st.markdown('<p class="section-title">Contact Information</p>', unsafe_allow_html=True)
+st.markdown('<h3 class="section-title">Contact Information</h3>', unsafe_allow_html=True)
 st.markdown("""
-<div class="contact-info">
-    <div class="contact-card">
-        <p><strong>📧 Email:</strong><br>danmayinternational.com.ng</p>
-    </div>
-    <div class="contact-card">
-        <p><strong>📞 Phone:</strong><br>08038965253<br>09051906862</p>
-    </div>
-    <div class="contact-card">
-        <p><strong>🏠 Address:</strong><br>Opposite UDSS, Camp David Street, Aluu, Port Harcourt</p>
-    </div>
+<div class="info-card">
+    <p>📧 danmayinternational.com.ng</p>
+    <p>📞 08038965253</p>
+    <p>📞 09051906862</p>
+    <p>🏠 Opposite UDSS, Camp David Street, Aluu</p>
 </div>
 """, unsafe_allow_html=True)
 
