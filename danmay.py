@@ -159,7 +159,7 @@ if not st.session_state.user_info:
                 else:
                     st.warning("Please fill in all fields")
 
-    # School information section
+    # School information section (only shown before chat starts)
     st.markdown('<h3 class="section-title">About Our School</h3>', unsafe_allow_html=True)
     st.markdown("""
     <div class="info-card">
@@ -172,7 +172,7 @@ if not st.session_state.user_info:
     </div>
     """, unsafe_allow_html=True)
     
-    # Contact information section
+    # Contact information section (only shown before chat starts)
     st.markdown('<h3 class="section-title">Contact Information</h3>', unsafe_allow_html=True)
     st.markdown("""
     <div class="info-card">
@@ -185,10 +185,10 @@ if not st.session_state.user_info:
     
     st.stop()
 
-# Main chat interface
+# Main chat interface (only shown after user info is submitted)
 render_header()
 
-# Student info section
+# Student info card
 st.markdown(f"""
 <div class="info-card">
     <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -273,31 +273,8 @@ if user_prompt:
     st.session_state.chat_history.append({"role": "assistant", "content": assistant_response})
     st.rerun()
 
-# School information section (shown after chat starts)
-st.markdown('<h3 class="section-title">About Our School</h3>', unsafe_allow_html=True)
-st.markdown("""
-<div class="info-card">
-    <p><strong>🏆 Premier Education:</strong><br>
-    From Creche to Secondary level</p>
-    <p><strong>🌟 Mission:</strong><br>
-    Safe, stimulating learning environment</p>
-    <p><strong>✨ Vision:</strong><br>
-    Excellence in morals, academics, discipline</p>
-</div>
-""", unsafe_allow_html=True)
-
-# Contact information section
-st.markdown('<h3 class="section-title">Contact Information</h3>', unsafe_allow_html=True)
-st.markdown("""
-<div class="info-card">
-    <p>📧 danmayinternational.com.ng</p>
-    <p>📞 08038965253</p>
-    <p>📞 09051906862</p>
-    <p>🏠 Opposite UDSS, Camp David Street, Aluu</p>
-</div>
-""", unsafe_allow_html=True)
-
-# Change student information button
+# Change student information button (shown below chat)
 if st.button("🔄 Change Student Information", use_container_width=True):
     st.session_state.user_info = None
+    st.session_state.chat_history = []
     st.rerun()
