@@ -22,60 +22,51 @@ def load_logo():
         st.error(f"Error loading logo: {e}")
         return None
 
-# Custom CSS with improved readability
+# Custom CSS with all requested styling
 st.markdown("""
 <style>
+    /* Hide header and footer */
+    footer {
+        visibility: hidden;
+    }
+    header {
+        visibility: hidden;
+    }
+    
     /* Show sidebar expander */
     [data-testid="collapsedControl"] {
         display: block !important;
         color: black !important;
     }
     
-    /* Main text color */
-    body, .stTextInput>div>div>input, .stSelectbox>div>div>select, .stTextArea>div>div>textarea {
-        color: black !important;
-    }
-    
-    /* Sidebar text color */
-    [data-testid="stSidebar"] * {
-        color: black !important;
-    }
-    
-    /* Card text color */
-    .info-card, .welcome-card {
-        color: black !important;
-    }
-    
-    /* Chat message text */
-    .stChatMessage {
-        color: black !important;
-    }
-    
-    /* Button text */
-    .stButton>button {
-        color: white !important;
-    }
-    
-    /* Original styling with improved contrast */
-    :root {
-        --primary: #2E86AB;
-        --secondary: #F18F01;
-        --accent: #A23B72;
-        --light: #FFFFFF;  /* Changed to pure white */
-        --dark: #000000;   /* Pure black for text */
-        --card-bg: #FFFFFF;
-        --sidebar-bg: #FFFFFF; /* White background */
-    }
-    
+    /* Main app styling */
     [data-testid="stAppViewContainer"] {
-        background-color: var(--light);
+        background-color: #FFFFFF;
     }
     
+    /* Sidebar styling */
     [data-testid="stSidebar"] {
-        background-color: var(--sidebar-bg) !important;
-        border-right: 1px solid #E0E0E0;
+        background-color: white !important;
+        border-right: 1px solid #e0e0e0;
     }
     
+    /* Ensure all text is black */
+    body, .stTextInput>div>div>input, .stSelectbox>div>div>select, 
+    .stTextArea>div>div>textarea, [data-testid="stSidebar"] * {
+        color: black !important;
+    }
+    
+    /* Card styling */
+    .info-card {
+        background-color: white;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        border-left: 4px solid #2E86AB;
+    }
+    
+    /* Chat message styling */
     .stChatMessage {
         border-radius: 15px;
         padding: 12px;
@@ -84,33 +75,82 @@ st.markdown("""
     }
     
     .user-message {
-        background-color: var(--secondary) !important;
+        background-color: #F18F01 !important;
         color: white !important;
-        border-left: 5px solid #D97B00;
     }
     
     .assistant-message {
-        background-color: var(--primary) !important;
-        color: white !important;
-        border-left: 5px solid #1C5D7F;
-    }
-    
-    .stButton>button {
-        background-color: var(--accent) !important;
+        background-color: #2E86AB !important;
         color: white !important;
     }
     
+    /* Header styling */
     .header-container {
-        background: linear-gradient(135deg, var(--primary), var(--accent));
+        background: linear-gradient(135deg, #2E86AB, #A23B72);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 0 0 15px 15px;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+    
+    /* Button styling */
+    .stButton>button {
+        background-color: #A23B72 !important;
         color: white !important;
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-weight: bold;
+        transition: all 0.3s;
     }
     
+    .stButton>button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    /* Title styling */
     .sidebar-title {
-        color: var(--dark) !important;
+        color: black !important;
+        font-size: 1.3rem !important;
+        text-align: center;
+        margin-bottom: 1rem;
+        font-weight: bold;
+        border-bottom: 2px solid #F18F01;
+        padding-bottom: 0.5rem;
     }
     
-    .info-card, .welcome-card {
-        color: var(--dark) !important;
+    /* Welcome card styling */
+    .welcome-card {
+        background-color: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        margin-bottom: 1.5rem;
+        border-left: 5px solid #A23B72;
+    }
+    
+    /* Badge styling */
+    .badge {
+        background-color: #A23B72;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        display: inline-block;
+    }
+    
+    /* Subject tags */
+    .subject-tag {
+        background-color: #2E86AB;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.7rem;
+        margin-right: 5px;
+        margin-bottom: 5px;
+        display: inline-block;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -129,7 +169,7 @@ if "user_info" not in st.session_state:
 def render_header():
     logo = load_logo()
     st.markdown("""
-    <div class="header-container" style="padding: 1.5rem; border-radius: 0 0 15px 15px; margin-bottom: 2rem; text-align: center;">
+    <div class="header-container">
         <div style="display: flex; justify-content: center; margin-bottom: 1rem;">
     """, unsafe_allow_html=True)
     
@@ -145,9 +185,6 @@ def render_header():
     </div>
     """, unsafe_allow_html=True)
 
-# [Rest of your application code remains exactly the same]
-# [Only the CSS and color handling has been modified]
-
 # User information form
 if not st.session_state.user_info:
     render_header()
@@ -157,7 +194,7 @@ if not st.session_state.user_info:
         with col2:
             with st.form("user_info_form"):
                 st.markdown("""
-                <div style="background-color: white; border-radius: 15px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                <div class="welcome-card">
                     <h3 style="color: #2E86AB; text-align: center;">🎓 Welcome to Our Learning Assistant</h3>
                     <p style="text-align: center; color: black;">Please provide your information to continue</p>
                 </div>
@@ -202,9 +239,9 @@ if not st.session_state.user_info:
 
     # School information in sidebar
     with st.sidebar:
-        st.markdown('<p style="color: black !important; font-size: 1.3rem; text-align: center; border-bottom: 2px solid #F18F01; padding-bottom: 0.5rem;">About Our School</p>', unsafe_allow_html=True)
+        st.markdown('<p class="sidebar-title">About Our School</p>', unsafe_allow_html=True)
         st.markdown("""
-        <div style="background-color: white; border-radius: 15px; padding: 1rem; margin-bottom: 1rem; color: black !important;">
+        <div class="info-card">
             <p><strong>🏆 Premier Education:</strong><br>
             From Creche to Secondary level</p>
             <p><strong>🌟 Mission:</strong><br>
@@ -220,24 +257,24 @@ render_header()
 
 # Student info card
 st.markdown(f"""
-<div style="background-color: white; border-radius: 15px; padding: 1.5rem; margin-bottom: 1.5rem; color: black !important;">
+<div class="welcome-card">
     <div style="display: flex; justify-content: space-between; align-items: center;">
         <div>
             <h3 style="color: #2E86AB; margin: 0;">👋 Welcome, {st.session_state.user_info['gender']} student!</h3>
-            <p style="margin: 0; color: black !important;">📚 Class: {st.session_state.user_info['class_level']} | 📏 Age: {st.session_state.user_info['age_range']}</p>
+            <p style="margin: 0; color: black;">📚 Class: {st.session_state.user_info['class_level']} | 📏 Age: {st.session_state.user_info['age_range']}</p>
         </div>
-        <div style="background-color: #A23B72; color: white; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem;">
+        <div class="badge">
             🎓 Learning Mode
         </div>
     </div>
     <div style="margin-top: 1rem;">
-        <p style="margin: 0.5rem 0; font-weight: bold; color: black !important;">📖 Suggested Subjects:</p>
+        <p style="margin: 0.5rem 0; font-weight: bold; color: black;">📖 Suggested Subjects:</p>
         <div>
-            <span style="background-color: #2E86AB; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.7rem; margin-right: 5px; display: inline-block;">English</span>
-            <span style="background-color: #2E86AB; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.7rem; margin-right: 5px; display: inline-block;">Mathematics</span>
-            <span style="background-color: #2E86AB; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.7rem; margin-right: 5px; display: inline-block;">Science</span>
-            <span style="background-color: #2E86AB; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.7rem; margin-right: 5px; display: inline-block;">Social Studies</span>
-            <span style="background-color: #2E86AB; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.7rem; margin-right: 5px; display: inline-block;">Moral Instruction</span>
+            <span class="subject-tag">English</span>
+            <span class="subject-tag">Mathematics</span>
+            <span class="subject-tag">Science</span>
+            <span class="subject-tag">Social Studies</span>
+            <span class="subject-tag">Moral Instruction</span>
         </div>
     </div>
 </div>
@@ -247,19 +284,19 @@ st.markdown(f"""
 for message in st.session_state.chat_history:
     if message["role"] == "user":
         st.markdown(f"""
-        <div class="user-message" style="border-radius: 15px; padding: 12px; margin: 8px 0;">
+        <div class="stChatMessage user-message">
             <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="font-weight: bold; font-size: 1.2rem; color: white !important;">👤 You:</div>
-                <div style="color: white !important;">{message["content"]}</div>
+                <div style="font-weight: bold; font-size: 1.2rem;">👤 You:</div>
+                <div>{message["content"]}</div>
             </div>
         </div>
         """, unsafe_allow_html=True)
     else:
         st.markdown(f"""
-        <div class="assistant-message" style="border-radius: 15px; padding: 12px; margin: 8px 0;">
+        <div class="stChatMessage assistant-message">
             <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="font-weight: bold; font-size: 1.2rem; color: white !important;">🏫 Assistant:</div>
-                <div style="color: white !important;">{message["content"]}</div>
+                <div style="font-weight: bold; font-size: 1.2rem;">🏫 Assistant:</div>
+                <div>{message["content"]}</div>
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -306,9 +343,9 @@ if user_prompt:
 
 # Sidebar information
 with st.sidebar:
-    st.markdown('<p style="color: black !important; font-size: 1.3rem; text-align: center; border-bottom: 2px solid #F18F01; padding-bottom: 0.5rem;">Student Profile</p>', unsafe_allow_html=True)
+    st.markdown('<p class="sidebar-title">Student Profile</p>', unsafe_allow_html=True)
     st.markdown(f"""
-    <div style="background-color: white; border-radius: 15px; padding: 1rem; margin-bottom: 1rem; color: black !important;">
+    <div class="info-card">
         <p><strong>👤 Student:</strong> {st.session_state.user_info['gender']}</p>
         <p><strong>📏 Age Range:</strong> {st.session_state.user_info['age_range']}</p>
         <p><strong>🏫 Class:</strong> {st.session_state.user_info['class_level']}</p>
@@ -316,9 +353,9 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
     
-    st.markdown('<p style="color: black !important; font-size: 1.3rem; text-align: center; border-bottom: 2px solid #F18F01; padding-bottom: 0.5rem;">Quick Links</p>', unsafe_allow_html=True)
+    st.markdown('<p class="sidebar-title">Quick Links</p>', unsafe_allow_html=True)
     st.markdown("""
-    <div style="background-color: white; border-radius: 15px; padding: 1rem; margin-bottom: 1rem; color: black !important;">
+    <div class="info-card">
         <p><a href="#" style="color: #A23B72 !important; text-decoration: none;">📚 School Portal</a></p>
         <p><a href="#" style="color: #A23B72 !important; text-decoration: none;">🗓️ Academic Calendar</a></p>
         <p><a href="#" style="color: #A23B72 !important; text-decoration: none;">📝 Homework Help</a></p>
@@ -326,9 +363,9 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
     
-    st.markdown('<p style="color: black !important; font-size: 1.3rem; text-align: center; border-bottom: 2px solid #F18F01; padding-bottom: 0.5rem;">School Contacts</p>', unsafe_allow_html=True)
+    st.markdown('<p class="sidebar-title">School Contacts</p>', unsafe_allow_html=True)
     st.markdown("""
-    <div style="background-color: white; border-radius: 15px; padding: 1rem; margin-bottom: 1rem; color: black !important;">
+    <div class="info-card">
         <p>📧 danmayinternational.com.ng</p>
         <p>📞 08038965253</p>
         <p>📞 09051906862</p>
