@@ -654,8 +654,8 @@ check_disappearing_messages()
 
 # Admin Dashboard
 if st.session_state.user["role"] == "admin":
-    st.sidebar.title("Admin Dashboard")
-    menu = st.sidebar.radio(
+    st.title("Admin Dashboard")
+    menu = st.radio(
         "Menu",
         ["Student Management", "Homework Review", "Timetable Management", "Parent Information", "Messaging", "Admin Profile"]
     )
@@ -936,8 +936,8 @@ if st.session_state.user["role"] == "admin":
 
 # Student Dashboard
 else:
-    st.sidebar.title("Student Dashboard")
-    menu = st.sidebar.radio(
+    st.title("Student Dashboard")
+    menu = st.radio(
         "Menu",
         ["Learning Assistant", "Homework", "Timetable", "Messages", "My Profile"]
     )
