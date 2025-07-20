@@ -655,10 +655,7 @@ check_disappearing_messages()
 # Admin Dashboard
 if st.session_state.user["role"] == "admin":
     st.title("Admin Dashboard")
-    menu = st.radio(
-        "Menu",
-        ["Student Management", "Homework Review", "Timetable Management", "Parent Information", "Messaging", "Admin Profile"]
-    )
+    menu = st.radio("Menu",["Student Management", "Homework Review", "Timetable Management", "Parent Information", "Messaging", "Admin Profile"])
     
     st.markdown(f'<div class="header-container"><h2>👨‍💼 Admin Dashboard</h2></div>', unsafe_allow_html=True)
     
@@ -937,10 +934,7 @@ if st.session_state.user["role"] == "admin":
 # Student Dashboard
 else:
     st.title("Student Dashboard")
-    menu = st.radio(
-        "Menu",
-        ["Learning Assistant", "Homework", "Timetable", "Messages", "My Profile"]
-    )
+    menu = st.radio("Menu",["Learning Assistant", "Homework", "Timetable", "Messages", "My Profile"])
     
     # Display student profile in sidebar
     with st.sidebar:
